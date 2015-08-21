@@ -1,0 +1,41 @@
+<!doctype html>
+
+<html>
+	<head>
+		<title>Silent Sight</title>
+		<link href="Style/main.css"  rel="stylesheet" type="text/css"/>
+	</head>
+	<h1>
+	Silent Sight
+	</h1>
+
+	<body>
+		<p>
+		This is a website where you can find all the most up to date sales and bids in the bitcoin market.
+		</p>
+
+		<p>
+		Click on a tab to get information from different Bitcoin Sites
+		</p>
+	<h2>Bids</h2>
+	<div id="bids_placeholder">waiting for orders...</div>
+
+	<h2>Asks</h2>
+	<div id="asks_placeholder">waiting for orders...</div>
+
+	<script src="https://cdn.socket.io/socket.io-1.3.6.js"></script>
+	<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+	<script src="wait.js"></script>
+	<script>
+		var bids_placeholder = document.getElementById("bids_placeholder")
+		var asks_placeholder = document.getElementById("asks_placeholder")
+  		var socket = io.connect('http://localhost:3000');
+  			socket.on('dataOrderBook', function (order_book) {
+    			//console.log(order_book);
+    			socket.emit('dataOrderBook', order_book);
+    			document.getElementById("bids_placeholder").innerHTML = order_book;
+    		}); 
+	</script>
+	</script>
+	</body>
+</html>

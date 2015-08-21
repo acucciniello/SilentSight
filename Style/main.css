@@ -1,0 +1,19 @@
+body{
+	background:#FFFFF;
+	font-family: cambria;
+}
+h1{
+	color:#0000FF;
+	font-family: arial;
+}
+h2{
+	color:#0000FF;
+	font-family: arial;
+}
+p{
+	background: #C0C0C0;
+	color: white;
+	padding: 10px;
+	font-family: arial;
+}
+
