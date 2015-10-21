@@ -1,41 +1,63 @@
-<!doctype html>
-
-<html>
-	<head>
-		<title>Silent Sight</title>
-		<link href="Style/main.css"  rel="stylesheet" type="text/css"/>
-	</head>
-	<h1>
-	Silent Sight
-	</h1>
-
-	<body>
-		<p>
-		This is a website where you can find all the most up to date sales and bids in the bitcoin market.
-		</p>
-
-		<p>
-		Click on a tab to get information from different Bitcoin Sites
-		</p>
-	<h2>Bids</h2>
-	<div id="bids_placeholder">waiting for orders...</div>
-
-	<h2>Asks</h2>
-	<div id="asks_placeholder">waiting for orders...</div>
-
-	<script src="https://cdn.socket.io/socket.io-1.3.6.js"></script>
-	<script src="http://localhost:3000/socket.io/socket.io.js"></script>
-	<script src="wait.js"></script>
-	<script>
-		var bids_placeholder = document.getElementById("bids_placeholder")
-		var asks_placeholder = document.getElementById("asks_placeholder")
-  		var socket = io.connect('http://localhost:3000');
-  			socket.on('dataOrderBook', function (order_book) {
-    			//console.log(order_book);
-    			socket.emit('dataOrderBook', order_book);
-    			document.getElementById("bids_placeholder").innerHTML = order_book;
-    		}); 
-	</script>
-	</script>
-	</body>
-</html>
+	<!doctype html>
+	<html>
+		<head>
+			<title>Silent Sight</title>
+			<link href="Style/main.css"  rel="stylesheet" type="text/css"/>
+		</head>
+		<h1>
+		Silent Sight
+		</h1>
+		<body id:"mainBody">
+			<p>
+			This is a website where you can find all the most up to date sales and bids in the bitcoin market.
+			</p>
+			<p>
+			Click on a tab to get information from different Bitcoin Sites
+			</p>
+			<table id="bitStampTable" style="width:100%" border="1">
+			</table>
+		<h2>Bids</h2>
+		<div id="bids_placeholder">waiting for orders...</div>
+		<h2>Asks</h2>
+		<div id="asks_placeholder">waiting for orders...</div>
+		<script src="https://cdn.socket.io/socket.io-1.3.6.js"></script>
+		<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+		<script src="wait.js"></script>
+		<script scr="server.js"></script>
+		<script>
+		    function tableCreate(order_holder){
+	    		var body = document.getElementById('mainBody');
+	    		var tbl = document.getElementById('bitStampTable');
+	    		var tbdy = document.createElement('tbody');
+	    		for (var i in order_holder.bids){
+	    			var tr = document.createElement('tr');
+	    					var td = document.createElement('td');
+	    					var td2 = document.createElement('td');
+	    					//var tdInfo = document
+	    					td.appendChild(document.createTextNode(order_holder.bids[i]))
+	    					td2.appendChild(document.createTextNode(order_holder.asks[i]))
+	    					//i == 1 && j == 1 ? td.setAttribute('rowSpan', '2') : null;
+	    					tr.appendChild(td)
+	    					tr.appendChild(td2)
+	    					tbdy.appendChild(tr);
+	    			}
+	    		console.log(tbl);
+	    		tbl.appendChild(tbdy);
+	    		tbl.parentNode.replaceChild(tbdy,tbdy);
+	    		tbl.innerHTML = tbdy.innerHTML;
+	    	}
+			var bids_placeholder = document.getElementById("bids_placeholder")
+			var asks_placeholder = document.getElementById("asks_placeholder")
+	  		var socket = io.connect('http://localhost:3000');
+	  			socket.on('dataOrderBook', function (order_holder) {
+	    			console.log(order_holder);
+	    			console.log(Date());
+	    			socket.emit('dataOrderBook', order_holder);
+	    			//document.getElementById("bids_placeholder").innerHTML = order_holder.bids;
+	    			//document.getElementById("asks_placeholder").innerHTML = order_holder.asks;
+	    			tableCreate(order_holder);
+	    		}); 
+		</script>
+		</script>
+		</body>
+	</html>

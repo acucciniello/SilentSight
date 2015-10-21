@@ -109,10 +109,10 @@ exports.process = function (errors, object) {
     var message = '';
     var details = [];
 
-    var processErrors = function (errors, parent) {
+    var processErrors = function (localErrors, parent) {
 
-        for (var i = 0, il = errors.length; i < il; ++i) {
-            var item = errors[i];
+        for (var i = 0, il = localErrors.length; i < il; ++i) {
+            var item = localErrors[i];
 
             var detail = {
                 message: item.toString(),
@@ -247,10 +247,7 @@ internals.annotate = function () {
     }
 
     var message = internals.safeStringify(obj, 2)
-        .replace(/\[Circular (.*?)_\$key\$_([, \d]+)_\$end\$_\]/g, function ($0, $1) {
-
-            return '[Circular ' + $1 + ']';
-        }).replace(/_\$key\$_([, \d]+)_\$end\$_\"/g, function ($0, $1) {
+        .replace(/_\$key\$_([, \d]+)_\$end\$_\"/g, function ($0, $1) {
 
             return '" \u001b[31m[' + $1 + ']\u001b[0m';
         }).replace(/\"_\$miss\$_([^\|]+)\|(\d+)_\$end\$_\"\: \"__missing__\"/g, function ($0, $1, $2) {

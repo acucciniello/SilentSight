@@ -1,19 +1,32 @@
 {
   "name": "silentsight",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "good": "^6.3.0",
+    "good-console": "^5.0.3",
+    "got": "^3.3.1",
+    "hapi": "^9.0.3",
+    "mongodb": "^2.0.43",
+    "mongoose": "^4.1.12",
+    "socket.io": "^1.3.6",
+    "waitjs": "^0.2.0"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acucciniello/SilentSight.git"
+  },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "good": "^6.3.0",
-    "good-console": "^5.0.2",
-    "got": "^3.3.1",
-    "socket.io": "^1.3.6"
+  "bugs": {
+    "url": "https://github.com/acucciniello/SilentSight/issues"
   },
-  "devDependencies": {},
-  "description": ""
+  "homepage": "https://github.com/acucciniello/SilentSight#readme"
 }
