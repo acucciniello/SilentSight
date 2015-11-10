@@ -53,8 +53,6 @@
 	    			console.log(order_holder);
 	    			console.log(Date());
 	    			socket.emit('dataOrderBook', order_holder);
-	    			//document.getElementById("bids_placeholder").innerHTML = order_holder.bids;
-	    			//document.getElementById("asks_placeholder").innerHTML = order_holder.asks;
 	    			tableCreate(order_holder);
 	    		}); 
 		</script>
