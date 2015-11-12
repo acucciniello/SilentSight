@@ -27,6 +27,14 @@ db.once('open', function(callback){
     });
 var silentSight = mongoose.model('silentSight', dataOrderBook);
 testBook = new silentSight;
+testBook.save(function(err){
+    if (err){
+       return console.error(err); 
+    } 
+    else {
+        console.log("testBook has been Saved");
+    }
+    });
 });
 
 app.get('/', function(req, res){
@@ -41,15 +49,15 @@ got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
 
 //Connect to Client
 io.on('connection', function (socket) {
-	pullData(socket, testBook);
+	pullData(socket);
 	socket.on('dataOrderBook', function(order_book) {
 		//console.log(order_book);
 	});
 });
 
 //Send Table to Client every 1.5 seconds
-function pullData (socket, testBook) {
-    repeat(15000, function(testBook){
+function pullData (socket) {
+    repeat(1500, function(){
     	console.log(Date());
     	got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
     		console.log(Date());
@@ -62,6 +70,7 @@ function pullData (socket, testBook) {
         	socket.emit('dataOrderBook',  order_holder);    
             testBook = order_book;
             console.log(testBook);
+            //testBook.save();
         });
     });
 }

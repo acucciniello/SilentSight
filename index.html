@@ -50,8 +50,6 @@
 			var asks_placeholder = document.getElementById("asks_placeholder")
 	  		var socket = io.connect('http://localhost:3000');
 	  			socket.on('dataOrderBook', function (order_holder) {
-	    			console.log(order_holder);
-	    			console.log(Date());
 	    			socket.emit('dataOrderBook', order_holder);
 	    			tableCreate(order_holder);
 	    		}); 
