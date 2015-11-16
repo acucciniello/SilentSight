@@ -56,8 +56,8 @@ io.on('connection', function (socket) {
 });
 
 //Send Table to Client every 1.5 seconds
-function pullData (socket) {
-    repeat(1500, function(){
+function pullData (socket, testBook) {
+    repeat(15000, function(testBook){
         console.log(Date());
         got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
             console.log(Date());
@@ -70,13 +70,6 @@ function pullData (socket) {
             socket.emit('dataOrderBook',  order_holder);    
             testBook = order_book;
             console.log(testBook);
-            //testBook.save();
         });
-    });
-}
-s = order_bids;
-            //testBook.asks = order_asks;
-            console.log(inBids);
-            console.log(inAsks);
     });
 }
