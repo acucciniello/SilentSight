@@ -26,7 +26,7 @@ db.once('open', function(callback){
         timestamp: Number
     });
 var silentSight = mongoose.model('silentSight', dataOrderBook);
-testBook = new silentSight;
+testBook = new silentSight({transaction: order_book});
 testBook.save(function(err){
     if (err){
        return console.error(err); 
@@ -56,8 +56,8 @@ io.on('connection', function (socket) {
 });
 
 //Send Table to Client every 1.5 seconds
-function pullData (socket, testBook) {
-    repeat(15000, function(testBook){
+function pullData (socket) {
+    repeat(1500, function(){
         console.log(Date());
         got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
             console.log(Date());
@@ -69,7 +69,21 @@ function pullData (socket, testBook) {
             order_holder.asks = order_asks;
             socket.emit('dataOrderBook',  order_holder);    
             testBook = order_book;
-            console.log(testBook);
+            console.log("About to save testBook")
+            /* Attempting to save databse every 1.5 seconds
+            testBook.mongoose.save(function(err, testBook){
+                if(err)
+                    {
+                        console.log("Testbook wasnt properly saved")
+                        return console.error(err);
+                    }
+                else
+                    {
+                        console.log(testBook);
+                        console.log("testBook has been saved");
+                    }
+                });
+            */
         });
     });
 }
