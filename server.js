@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var url = 'mongodb://localhost:27017/silentSight';
 var order_book;
 var dataOrderBook;
+var tableData;
 var testBook;
 server.listen(3000);
 
@@ -21,12 +22,13 @@ db.once('open', function(callback){
         amount: Number,
         type: String
     });
-    dataOrderBook = mongoose.Schema({
+    tableData = mongoose.Schema({
         transactions: [transaction],
         timestamp: Number
     });
-var silentSight = mongoose.model('silentSight', dataOrderBook);
+var silentSight = mongoose.model('silentSight', tableData);
 testBook = new silentSight({transaction: order_book});
+console.log(testBook);
 testBook.save(function(err){
     if (err){
        return console.error(err); 
@@ -67,11 +69,9 @@ function pullData (socket) {
             var order_holder = {}
             order_holder.bids = order_bids;
             order_holder.asks = order_asks;
-            socket.emit('dataOrderBook',  order_holder);    
-            testBook = order_book;
-            console.log("About to save testBook")
-            /* Attempting to save databse every 1.5 seconds
-            testBook.mongoose.save(function(err, testBook){
+            socket.emit('dataOrderBook',  order_holder);   
+            //testBook.insert(order_book);
+            testBook.save(function(err, testBook){
                 if(err)
                     {
                         console.log("Testbook wasnt properly saved")
@@ -83,7 +83,6 @@ function pullData (socket) {
                         console.log("testBook has been saved");
                     }
                 });
-            */
         });
     });
 }
