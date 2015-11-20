@@ -26,18 +26,30 @@ db.once('open', function(callback){
         transactions: [transaction],
         timestamp: Number
     });
-var silentSight = mongoose.model('silentSight', tableData);
-testBook = new silentSight({transaction: order_book});
-console.log(testBook);
-testBook.save(function(err){
-    if (err){
-       return console.error(err); 
-    } 
-    else {
-        console.log("testBook has been Saved");
-    }
+    //var bidsAsks = mongoose.model('bidsAsks', transaction);
+    //bidsTrans = new bidsAsks({price: , amount: })
+    var tableModel = mongoose.model('tableModel', transaction);
+    var silentSight = mongoose.model('silentSight', tableData);
+    testBook = new silentSight({
+        transactions: [
+            new tableModel({
+                type:'bid',
+                amount: 10,
+                price: 100
+            })
+            ],
+        timestamp: 12345
     });
-});
+    console.log(testBook);
+    testBook.save(function(err){
+        if (err){
+           return console.error(err); 
+        } 
+        else {
+            console.log("testBook has been Saved");
+        }
+        });
+    });
 
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
@@ -71,6 +83,7 @@ function pullData (socket) {
             order_holder.asks = order_asks;
             socket.emit('dataOrderBook',  order_holder);   
             //testBook.insert(order_book);
+            testBook.update({transaction: order_book});
             testBook.save(function(err, testBook){
                 if(err)
                     {
