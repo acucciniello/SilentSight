@@ -57,12 +57,13 @@ app.get('/', function(req, res){
 
 //Pull Data from Bit Stamp
 got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
-        order_book = data;
-        //console.log(order_book);
+	 order_book = data;
+         console.log(order_book);
 })
 
 //Connect to Client
 io.on('connection', function (socket) {
+	console.log("Guys we have connected to the client");
     pullData(socket);
     socket.on('dataOrderBook', function(order_book) {
         //console.log(order_book);
@@ -71,6 +72,7 @@ io.on('connection', function (socket) {
 
 //Send Table to Client every 1.5 seconds
 function pullData (socket) {
+	console.log("Hi we entered the pullData function");
     repeat(1500, function(){
         console.log(Date());
         got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
