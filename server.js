@@ -13,6 +13,7 @@ var tableData;
 var testBook;
 server.listen(3000);
 
+<<<<<<< c8767bcd6a6e5de4841d395d2252d75eb0f93a9d
 //Database work
 mongoose.connect(url);
 var db = mongoose.connection;
@@ -48,6 +49,18 @@ db.once('open', function(callback){
         } 
         else {
             console.log("testBook has been Saved");
+=======
+//DATABASE 
+pg.connect(function(err, client, done){
+    if(err){
+        return console.error('error fetching client from pool', err);
+    }
+    client.query('INSERT INTO orderdata VALUES (415.0, 1.000000, "bids", "2001-12-12")', function(err, result){
+        //call 'done()' to realease the client back to the pool
+        done();
+        if(err){
+            return console.error('error running query', err);
+>>>>>>> Issue accessing the table 'orderdata'
         }
         });
     });
@@ -73,8 +86,12 @@ io.on('connection', function (socket) {
 
 //Send Table to Client every 1.5 seconds
 function pullData (socket) {
+<<<<<<< c8767bcd6a6e5de4841d395d2252d75eb0f93a9d
 	console.log("Hi we entered the pullData function");
     repeat(1500, function(){
+=======
+    repeat(15000, function(){
+>>>>>>> Issue accessing the table 'orderdata'
         console.log(Date());
         got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
             console.log(Date());
@@ -85,6 +102,7 @@ function pullData (socket) {
             order_holder.bids = order_bids;
             order_holder.asks = order_asks;
             socket.emit('dataOrderBook',  order_holder);   
+<<<<<<< c8767bcd6a6e5de4841d395d2252d75eb0f93a9d
             //testBook.insert(order_book);
             testBook.update({transaction: order_book});
             testBook.save(function(err, testBook){
@@ -99,6 +117,9 @@ function pullData (socket) {
                         console.log("testBook has been saved");
                     }
                 });
+=======
+            socket.emit('dataOrderBook',  order_holder);    
+>>>>>>> Issue accessing the table 'orderdata'
         });
     });
 }
