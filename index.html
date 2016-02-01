@@ -29,7 +29,7 @@
 	    		var body = document.getElementById('mainBody');
 	    		var tbl = document.getElementById('bitStampTable');
 	    		var tbdy = document.createElement('tbody');
-	    		for (var i = 0; i < 200; i++){
+	    		for (var i = 0; i < 50; i++){
 	    			var tr = document.createElement('tr');
 	    					var td = document.createElement('td');
 	    					var td2 = document.createElement('td');
@@ -48,7 +48,7 @@
 	    	}
 			var bids_placeholder = document.getElementById("bids_placeholder")
 			var asks_placeholder = document.getElementById("asks_placeholder")
-	  		var socket = io.connect('ec2-52-91-20-184.compute-1.amazonaws.com:3000');
+	  		var socket = io.connect('http://localhost:3000');
 	  			socket.on('dataOrderBook', function (order_holder) {
 	    			console.log(order_holder);
 	    			console.log(Date());

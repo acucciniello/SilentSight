@@ -4,13 +4,16 @@ var app = express()
 var got = require('got');
 var server = require('http').createServer(app)
 var io = require('socket.io').listen(server);
+var pg = require('pg');
 var order_book;
 var dataOrderBook;
+var conString  = "pg://username:password@localhost/orderbook";
 
 server.listen(3000);
 
 //DATABASE 
-pg.connect(function(err, client, done){
+pg.connect(conString, function(err, client, done){
+    console.log("Connected to at least something");
     if(err){
         return console.error('error fetching client from pool', err);
     }
@@ -20,6 +23,7 @@ pg.connect(function(err, client, done){
         if(err){
             return console.error('error running query', err);
         }
+        console.log("We added this tp the table");
         });
     });
 
@@ -35,7 +39,6 @@ got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
 
 //Connect to Client
 io.on('connection', function (socket) {
-	console.log("Guys we have connected to the client");
     pullData(socket);
     socket.on('dataOrderBook', function(order_book) {
         //console.log(order_book);
