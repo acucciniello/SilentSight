@@ -17,7 +17,7 @@ pg.connect(conString, function(err, client, done){
     if(err){
         return console.error('error fetching client from pool', err);
     }
-    client.query('INSERT INTO orderdata VALUES (415.0, 1.000000, "bids", "2001-12-12")', function(err, result){
+    client.query('INSERT INTO orderdata VALUES (200.0, 2.000000, $$bids$$, $$2001-12-12$$)', function(err, result){
         //call 'done()' to realease the client back to the pool
         done();
         if(err){
