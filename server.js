@@ -47,7 +47,7 @@ function pullData (socket) {
             var order_bids = order_book.bids;
             var order_asks = order_book.asks;
             pg.connect(conString, function(err, client, done){
-                console.log("Connected to at least something");
+                //console.log("Connected to at least something");
                 if(err){
                     return console.error('error fetching client from pool', err);
                 }
@@ -56,8 +56,8 @@ function pullData (socket) {
                     askingAmount = order_asks[i][1];
                     biddingPrice = order_bids[i][0];
                     biddingAmount = order_bids[i][1];
-                    console.log(price);
-                    console.log(amount);
+                    //console.log(price);
+                    //console.log(amount);
                     var bidString = format('INSERT INTO orderdata VALUES(%L, %L, $$bids$$ , %L)', biddingPrice, biddingAmount, currentTime);
                     var askString = format('INSERT INTO orderdata VALUES(%L, %L, $$asks$$ , %L)', askingPrice, askingAmount, currentTime);
                     //DATABASE 
@@ -67,14 +67,14 @@ function pullData (socket) {
                         if(err){
                             return console.error('error running query', err);
                         }
-                        console.log("We added a bid to the table");
+                        //console.log("We added a bid to the table");
                     });
                     client.query(askString, function(err, result){
                         done();
                         if(err){
                             return console.error('error running query', err);
                         }
-                        console.log("We added a ask to the table");
+                        //console.log("We added a ask to the table");
                     });
                 }
                 });

@@ -14,6 +14,20 @@
 			<p>
 			Click on a tab to get information from different Bitcoin Sites
 			</p>
+			<p>
+			<label>Time(in HH:MM:SS format)</label>
+			<input type="text"
+				id = timeBox
+				value = "00:00:00"
+			/>
+			<button type="button" onclick="enterTime();">Enter Time</button>
+			</p>
+			<script>
+			function enterTime(){
+				var timeEntered = document.getElementById("timeBox").value;
+				console.log(timeEntered);
+			}
+			</script>
 			<table id="bitStampTable" style="width:100%" border="1">
 			</table>
 		<h2>Bids</h2>
@@ -41,7 +55,7 @@
 	    					tr.appendChild(td2)
 	    					tbdy.appendChild(tr);
 	    			}
-	    		console.log(tbl);
+	    		//console.log(tbl);
 	    		tbl.appendChild(tbdy);
 	    		tbl.parentNode.replaceChild(tbdy,tbdy);
 	    		tbl.innerHTML = tbdy.innerHTML;
@@ -50,8 +64,8 @@
 			var asks_placeholder = document.getElementById("asks_placeholder")
 	  		var socket = io.connect('http://localhost:3000');
 	  			socket.on('dataOrderBook', function (order_holder) {
-	    			console.log(order_holder);
-	    			console.log(Date());
+	    			//console.log(order_holder);
+	    			//console.log(Date());
 	    			socket.emit('dataOrderBook', order_holder);
 	    			tableCreate(order_holder);
 	    		}); 
