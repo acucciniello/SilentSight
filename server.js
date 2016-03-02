@@ -25,7 +25,6 @@ app.get('/', function(req, res){
 //Pull Data from Bit Stamp
 got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
      order_book = data;
-         //console.log(order_book);
 })
 
 
@@ -34,7 +33,6 @@ got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
 io.on('connection', function (socket) {
     pullData(socket);
     socket.on('dataOrderBook', function(order_book) {
-        //console.log(order_book);
     });
 });
 
@@ -47,7 +45,6 @@ function pullData (socket) {
             var order_bids = order_book.bids;
             var order_asks = order_book.asks;
             pg.connect(conString, function(err, client, done){
-                //console.log("Connected to at least something");
                 if(err){
                     return console.error('error fetching client from pool', err);
                 }
@@ -56,25 +53,20 @@ function pullData (socket) {
                     askingAmount = order_asks[i][1];
                     biddingPrice = order_bids[i][0];
                     biddingAmount = order_bids[i][1];
-                    //console.log(price);
-                    //console.log(amount);
                     var bidString = format('INSERT INTO orderdata VALUES(%L, %L, $$bids$$ , %L)', biddingPrice, biddingAmount, currentTime);
                     var askString = format('INSERT INTO orderdata VALUES(%L, %L, $$asks$$ , %L)', askingPrice, askingAmount, currentTime);
                     //DATABASE 
                     client.query(bidString, function(err, result){
-                        //call 'done()' to realease the client back to the pool
                         done();
                         if(err){
                             return console.error('error running query', err);
                         }
-                        //console.log("We added a bid to the table");
                     });
                     client.query(askString, function(err, result){
                         done();
                         if(err){
                             return console.error('error running query', err);
                         }
-                        //console.log("We added a ask to the table");
                     });
                 }
                 });
