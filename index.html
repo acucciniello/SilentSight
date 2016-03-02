@@ -60,6 +60,10 @@
 	    			socket.emit('dataOrderBook', order_holder);
 	    			tableCreate(order_holder);
 	    		}); 
+	    	var timeSent= io.connect('http://localhost:3000');
+	    		timeSent.on('timeSentToDB', function(timeEntered){
+	    			timeSent.emit('timeSentToDB', timeEntered);
+	    		})
 		</script>
 		</script>
 		</body>

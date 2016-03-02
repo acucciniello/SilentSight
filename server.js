@@ -27,12 +27,12 @@ got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
      order_book = data;
 })
 
-
-
 //Connect to Client
-io.on('connection', function (socket) {
+io.on('connection', function (socket, timeSent) {
     pullData(socket);
     socket.on('dataOrderBook', function(order_book) {
+    });
+    timeSent.on('timeSentToDB', function(timeEntered){
     });
 });
 
@@ -67,7 +67,7 @@ function pullData (socket) {
                         if(err){
                             return console.error('error running query', err);
                         }
-                    });
+3                    });
                 }
                 });
                 
