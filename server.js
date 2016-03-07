@@ -13,8 +13,7 @@ var conString  = "pg://Antonio:timleetimlee@localhost/orderbook";
 var format = require('pg-format');
 var price;
 var amount;
-
-
+var searchTime;
 
 server.listen(3000);
 
@@ -28,13 +27,14 @@ got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
 })
 
 //Connect to Client
-io.on('connection', function (socket, timeSent) {
+io.on('connection', function (socket) {
     pullData(socket);
     socket.on('dataOrderBook', function(order_book) {
     });
-    timeSent.on('timeSentToDB', function(timeEntered){
+    socket.on('timeSentToDB', function(searchTime){
+        console.log(searchTime);
     });
-});
+})
 
 //Send Table to Client every 1.5 seconds
 function pullData (socket) {
@@ -67,15 +67,14 @@ function pullData (socket) {
                         if(err){
                             return console.error('error running query', err);
                         }
-3                    });
+                   });
                 }
                 });
-                
-
             var order_holder = {}
             order_holder.bids = order_bids;
             order_holder.asks = order_asks;
             socket.emit('dataOrderBook',  order_holder);   
+            console.log(searchTime);
         });
     });
 };
