@@ -50,23 +50,17 @@
 	    		tbl.innerHTML = tbdy.innerHTML;
 	    	}
 	    	var timeEntered;
+	    	var currentSearchTime;
 			function enterTime(){
 				timeEntered = document.getElementById("timeBox").value;
-				console.log(timeEntered);
-
-			}
-
+				socket.emit('timeSentToDB', timeEntered);
+			}			
 			var bids_placeholder = document.getElementById("bids_placeholder")
 			var asks_placeholder = document.getElementById("asks_placeholder")
 	  		var socket = io.connect('http://localhost:3000');
-	  			socket.on('dataOrderBook', function (order_holder) {
-	    			socket.emit('dataOrderBook', order_holder);
+	  			socket.on('dataOrderBook', function (order_holder, timeEntered) {
 	    			tableCreate(order_holder);
 	    		}); 
-	    		//console.log(timeEntered);
-	    		socket.on('timeSentToDB', function(timeEntered){
-	    			socket.emit('timeSentToDB', timeEntered);
-	    		})
 		</script>
 		</script>
 		</body>

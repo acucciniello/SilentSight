@@ -29,12 +29,11 @@ got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
 //Connect to Client
 io.on('connection', function (socket) {
     pullData(socket);
-    socket.on('dataOrderBook', function(order_book) {
-    });
     socket.on('timeSentToDB', function(searchTime){
-        console.log(searchTime);
+                console.log(searchTime);
     });
-})
+
+});
 
 //Send Table to Client every 1.5 seconds
 function pullData (socket) {
@@ -74,7 +73,7 @@ function pullData (socket) {
             order_holder.bids = order_bids;
             order_holder.asks = order_asks;
             socket.emit('dataOrderBook',  order_holder);   
-            console.log(searchTime);
+            
         });
     });
 };
