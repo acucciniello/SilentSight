@@ -31,6 +31,20 @@ io.on('connection', function (socket) {
     pullData(socket);
     socket.on('timeSentToDB', function(searchTime){
                 console.log(searchTime);
+                pg.connect(conString, function(err, client, done){
+                    if (err){
+                        return console.error('error fetching the timestamped client from pool', err);
+                    }
+                    var loadTimeStampValues = format('SELECT * FROM orderdata WHERE timestamp = %L', searchTime);
+                    client.query(loadTimeStampValues, function(err, result){
+                        done();
+                        console.log("The time was selected.")
+                        if(err){
+                            console.log("You entered a time where the data doesnt exist");
+                            return console.error('error running query', err);
+                        }
+                    })
+                })
     });
 
 });
