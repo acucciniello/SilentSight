@@ -14,6 +14,7 @@ var format = require('pg-format');
 var price;
 var amount;
 var searchTime;
+var oldTableShow = 0;
 
 server.listen(3000);
 
@@ -35,12 +36,16 @@ io.on('connection', function (socket) {
                     if (err){
                         return console.error('error fetching the timestamped client from pool', err);
                     }
-                    var loadTimeStampValues = format('SELECT * FROM orderdata WHERE timestamp = %L', searchTime);
+                    var loadTimeStampValues = format('SELECT * FROM orderdata WHERE timestamp = %L ORDER BY type', searchTime);
                     client.query(loadTimeStampValues, function(err, result){
                         done();
-                        console.log("The time was selected.")
+                        console.log(loadTimeStampValues);
+                        //Code to show the new table
+                        oldTableShow = 1;
+                        console.log(result.rows[39]);
                         if(err){
                             console.log("You entered a time where the data doesnt exist");
+                            console.log("Please enter a time where data exists in the database.")
                             return console.error('error running query', err);
                         }
                     })
@@ -86,8 +91,11 @@ function pullData (socket) {
             var order_holder = {}
             order_holder.bids = order_bids;
             order_holder.asks = order_asks;
-            socket.emit('dataOrderBook',  order_holder);   
-            
+            if(oldTableShow == 0)
+            {
+                socket.emit('dataOrderBook',  order_holder);   
+
+            }
         });
     });
 };
