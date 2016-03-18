@@ -14,8 +14,18 @@ var format = require('pg-format');
 var price;
 var amount;
 var searchTime;
+var dbAskPrice;
+var dbAskAmount;
+var dbAskPair = [];
+var dbBidPair = [];
+var dbBidPrice;
+var dbBidAmount;
 var oldTableShow = 0;
-
+var askColumn = {};
+var bidColumn = {};
+var reconstructedTable = {"bids": bidColumn, "asks": askColumn};
+var askCount = 19;
+var bidCount = 39;
 server.listen(3000);
 
 app.get('/', function(req, res){
@@ -42,7 +52,32 @@ io.on('connection', function (socket) {
                         console.log(loadTimeStampValues);
                         //Code to show the new table
                         oldTableShow = 1;
-                        console.log(result.rows[39]);
+                        for (var j = 0; j <= askCount; j++)
+                        {
+                            dbAskPrice = result.rows[j].price;
+                            dbAskAmount = result.rows[j].amount;
+                            dbAskPair[0] = dbAskPrice;
+                            dbAskPair[1] = dbAskAmount;
+                            askColumn[j] = dbAskPair;
+                            dbBidPrice = result.rows[j+20].price;
+                            dbBidAmount = result.rows[j+20].amount;
+                            dbBidPair[0] = dbBidPrice;
+                            dbBidPair[1] = dbBidAmount;
+                            bidColumn[j] = dbBidPair;
+                            reconstructedTable["asks"[j]] = askColumn[j];
+                            reconstructedTable["bids"[j]] = bidColumn[j];
+                        }
+                        /*
+                        for (var k = 20; k <= bidCount; k++)
+                        {
+                            dbBidPrice = result.rows[k].price;
+                            dbBidAmount = result.rows[k].amount;
+                            dbBidPair[0] = dbBidPrice;
+                            dbBidPair[1] = dbBidAmount;
+                            bidColumn[k-20] = dbBidPair;
+                        }*/
+                        console.log(reconstructedTable)
+                        socket.emit('dataOrderBook',  reconstructedTable); 
                         if(err){
                             console.log("You entered a time where the data doesnt exist");
                             console.log("Please enter a time where data exists in the database.")
