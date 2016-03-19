@@ -23,7 +23,10 @@ var dbBidAmount;
 var oldTableShow = 0;
 var askColumn = {};
 var bidColumn = {};
-var reconstructedTable = {"bids": bidColumn, "asks": askColumn};
+//var reconstructedTable = {"bids": bidColumn, "asks": askColumn};
+var reconstructedTable = {};
+reconstructedTable.bids = [];
+reconstructedTable.asks = [];
 var askCount = 19;
 var bidCount = 39;
 server.listen(3000);
@@ -41,7 +44,7 @@ got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
 io.on('connection', function (socket) {
     pullData(socket);
     socket.on('timeSentToDB', function(searchTime){
-                console.log(searchTime);
+                //console.log(searchTime);
                 pg.connect(conString, function(err, client, done){
                     if (err){
                         return console.error('error fetching the timestamped client from pool', err);
@@ -49,7 +52,7 @@ io.on('connection', function (socket) {
                     var loadTimeStampValues = format('SELECT * FROM orderdata WHERE timestamp = %L ORDER BY type', searchTime);
                     client.query(loadTimeStampValues, function(err, result){
                         done();
-                        console.log(loadTimeStampValues);
+                        //console.log(loadTimeStampValues);
                         //Code to show the new table
                         oldTableShow = 1;
                         for (var j = 0; j <= askCount; j++)
@@ -64,8 +67,12 @@ io.on('connection', function (socket) {
                             dbBidPair[0] = dbBidPrice;
                             dbBidPair[1] = dbBidAmount;
                             bidColumn[j] = dbBidPair;
-                            reconstructedTable["asks"[j]] = askColumn[j];
-                            reconstructedTable["bids"[j]] = bidColumn[j];
+
+                            reconstructedTable.bids[j] = bidColumn[j];
+                            reconstructedTable.asks[j] = askColumn[j];
+                            
+                            //reconstructedTable["asks"[j]] = askColumn[j];
+                            //reconstructedTable["bids"[j]] = bidColumn[j];
                         }
                         /*
                         for (var k = 20; k <= bidCount; k++)
