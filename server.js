@@ -1,5 +1,4 @@
 require('waitjs');
-
 var express = require('express')
 var app = express()
 var got = require('got');
@@ -16,14 +15,11 @@ var amount;
 var searchTime;
 var dbAskPrice;
 var dbAskAmount;
-var dbAskPair = [];
-var dbBidPair = [];
 var dbBidPrice;
 var dbBidAmount;
 var oldTableShow = 0;
 var askColumn = {};
 var bidColumn = {};
-//var reconstructedTable = {"bids": bidColumn, "asks": askColumn};
 var reconstructedTable = {};
 reconstructedTable.bids = [];
 reconstructedTable.asks = [];
@@ -44,7 +40,6 @@ got('https://www.bitstamp.net/api/order_book/', function(error, data, res) {
 io.on('connection', function (socket) {
     pullData(socket);
     socket.on('timeSentToDB', function(searchTime){
-                //console.log(searchTime);
                 pg.connect(conString, function(err, client, done){
                     if (err){
                         return console.error('error fetching the timestamped client from pool', err);
@@ -52,44 +47,34 @@ io.on('connection', function (socket) {
                     var loadTimeStampValues = format('SELECT * FROM orderdata WHERE timestamp = %L ORDER BY type', searchTime);
                     client.query(loadTimeStampValues, function(err, result){
                         done();
-                        //console.log(loadTimeStampValues);
-                        //Code to show the new table
+                        if(err){
+                            console.log("You entered a time where the data doesnt exist");
+                            console.log("Please enter a time where data exists in the database.")
+                            return console.error('error running query', err);
+                        }
+
                         oldTableShow = 1;
                         for (var j = 0; j <= askCount; j++)
                         {
+                            var dbAskPair = [];
                             dbAskPrice = result.rows[j].price;
                             dbAskAmount = result.rows[j].amount;
                             dbAskPair[0] = dbAskPrice;
                             dbAskPair[1] = dbAskAmount;
                             askColumn[j] = dbAskPair;
+
+                            var dbBidPair = [];
                             dbBidPrice = result.rows[j+20].price;
                             dbBidAmount = result.rows[j+20].amount;
                             dbBidPair[0] = dbBidPrice;
                             dbBidPair[1] = dbBidAmount;
                             bidColumn[j] = dbBidPair;
 
+
                             reconstructedTable.bids[j] = bidColumn[j];
                             reconstructedTable.asks[j] = askColumn[j];
-                            
-                            //reconstructedTable["asks"[j]] = askColumn[j];
-                            //reconstructedTable["bids"[j]] = bidColumn[j];
                         }
-                        /*
-                        for (var k = 20; k <= bidCount; k++)
-                        {
-                            dbBidPrice = result.rows[k].price;
-                            dbBidAmount = result.rows[k].amount;
-                            dbBidPair[0] = dbBidPrice;
-                            dbBidPair[1] = dbBidAmount;
-                            bidColumn[k-20] = dbBidPair;
-                        }*/
-                        console.log(reconstructedTable)
                         socket.emit('dataOrderBook',  reconstructedTable); 
-                        if(err){
-                            console.log("You entered a time where the data doesnt exist");
-                            console.log("Please enter a time where data exists in the database.")
-                            return console.error('error running query', err);
-                        }
                     })
                 })
     });
