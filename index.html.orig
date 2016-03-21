@@ -1,0 +1,67 @@
+	<!doctype html>
+	<html>
+		<head>
+			<title>Silent Sight</title>
+			<link href="Style/main.css"  rel="stylesheet" type="text/css"/>
+		</head>
+		<h1>
+		Silent Sight
+		</h1>
+		<body id:"mainBody">
+			<p>
+			This is a website where you can find all the most up to date sales and bids in the bitcoin market.
+			</p>
+			<p>
+			Click on a tab to get information from different Bitcoin Sites
+			</p>
+			<p>
+			<label>Time(in HH:MM:SS format)</label>
+			<input type="text"
+				id = timeBox
+				value = "00:00:00"
+			/>
+			<button type="button" onclick="enterTime();">Enter Time</button>
+			</p>
+			<script>
+			</script>
+			<table id="bitStampTable" style="width:100%" border="1">
+			</table>
+		<script src="https://cdn.socket.io/socket.io-1.3.6.js"></script>
+		<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+		<script src="wait.js"></script>
+		<script scr="server.js"></script>
+		<script>
+		    function tableCreate(order_holder){
+	    		var body = document.getElementById('mainBody');
+	    		var tbl = document.getElementById('bitStampTable');
+	    		var tbdy = document.createElement('tbody');
+	    		for (var i = 0; i < 50; i++){
+	    			var tr = document.createElement('tr');
+	    					var td = document.createElement('td');
+	    					var td2 = document.createElement('td');
+	    					td.appendChild(document.createTextNode(order_holder.bids[i]))
+	    					td2.appendChild(document.createTextNode(order_holder.asks[i]))
+	    					tr.appendChild(td)
+	    					tr.appendChild(td2)
+	    					tbdy.appendChild(tr);
+	    			}
+	    		tbl.appendChild(tbdy);
+	    		tbl.parentNode.replaceChild(tbdy,tbdy);
+	    		tbl.innerHTML = tbdy.innerHTML;
+	    	}
+	    	var timeEntered;
+	    	var currentSearchTime;
+			function enterTime(){
+				timeEntered = document.getElementById("timeBox").value;
+				socket.emit('timeSentToDB', timeEntered);
+			}			
+			var bids_placeholder = document.getElementById("bids_placeholder")
+			var asks_placeholder = document.getElementById("asks_placeholder")
+	  		var socket = io.connect('http://localhost:3000');
+	  			socket.on('dataOrderBook', function (order_holder, timeEntered) {
+	    			tableCreate(order_holder);
+	    		}); 
+		</script>
+		</script>
+		</body>
+	</html>
